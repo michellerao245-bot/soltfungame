@@ -3,29 +3,14 @@ import { GAMES_DATA } from "./data/games";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, ExternalLink, ArrowLeft } from "lucide-react";
-//import { Web3Provider } from "./context/Web3Provider";
-import GhostHunter from "./components/GhostHunter";
-import SoltSlots from "./components/SoltSlots";
-import Footer from "./components/Footer";
-import DiceGame from "./components/DiceGame";
-import CrashGame from "./components/CrashGame";
-import EmpireBattle from "./components/EmpireBattle";
-import MoonJump from './components/MoonJump';
-import PokerGame from "./components/PokerGame";
-import NeonRoulette from "./components/NeonRoulette";
-import WheelOfFortuneGame from "./components/WheelOfFortuneGame";
-import RealDream11Web3 from './components/RealDream11Web3';
-import TermsOfUse from "./pages/TermsOfUse";
-import PrivatePolicy from "./pages/PrivatePolicy";
-import Documentation from "./pages/Documentation";
-import MarketingService from "./pages/MarketingService";
-import LegalSection from "./pages/LegalSection";
-import DepositModal from "./components/DepositModal";
-import WithdrawModal from "./components/WithdrawModal";
-import TransactionSuccessModal from "./components/TransactionSuccessModal";
-import WalletDisplay from "./components/WalletDisplay";
+import { useAccount } from "wagmi"; // 1. IMPORT UNCOMMENT KIYA
+import { Web3Provider } from "./context/Web3Provider";
+
+// ... (Baaki saare components ke imports wahi rahenge)
 
 function CasinoApp() {
+  const { address, isConnected } = useAccount(); // 2. Yahan UNCOMMENT KIYA
+
   const [activeGame, setActiveGame] = useState(null);
   const [betAmount, setBetAmount] = useState(10);
   const [rollUnder, setRollUnder] = useState(50);
@@ -33,9 +18,20 @@ function CasinoApp() {
   const [lastResult, setLastResult] = useState(null);
   const [gameHistory, setGameHistory] = useState([]);
   const [balance, setBalance] = useState(0);
+
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // 3. EFFECT BHI UNCOMMENT KIYA TAAKI DATA LOAD HO SAKE
+  useEffect(() => {
+    if (isConnected && address) {
+      loadUserData(address);
+    } else {
+      setBalance(0);
+      setGameHistory([]);
+    }
+  }, [isConnected, address]);
 
   const loadUserData = (walletAddr) => {
     if (!walletAddr) return;
@@ -63,8 +59,14 @@ function CasinoApp() {
   };
 
   const playDice = async () => {
-    if (!isConnected || !address) { alert("Please connect your wallet first!"); return; }
-    if (balance < betAmount) { alert("Insufficient Balance in your Empire Wallet!"); return; }
+    if (!isConnected || !address) {
+      alert("Please connect your wallet first!");
+      return;
+    }
+    if (balance < betAmount) {
+      alert("Insufficient Balance in your Empire Wallet!");
+      return;
+    }
     setIsRolling(true);
     try {
       setTimeout(() => {
@@ -73,14 +75,34 @@ function CasinoApp() {
         const multiplier = 98 / rollUnder;
         const profit = isUserWin ? (betAmount * multiplier) - betAmount : -betAmount;
         handleBalanceUpdate(profit);
-        const newHistoryItem = { id: Date.now(), game: "Cyber Dice", bet: betAmount, roll: rolledNumber, val: rolledNumber, target: rollUnder, win: isUserWin, profit: parseFloat(profit.toFixed(2)), time: new Date().toLocaleTimeString() };
-        setGameHistory((prev) => { const currentHist = Array.isArray(prev) ? prev : []; const updatedHist = [newHistoryItem, ...currentHist].slice(0, 10); localStorage.setItem(`empire_hist_${address}`, JSON.stringify(updatedHist)); return updatedHist; });
+        const newHistoryItem = {
+          id: Date.now(),
+          game: "Cyber Dice",
+          bet: betAmount,
+          roll: rolledNumber,
+          val: rolledNumber,
+          target: rollUnder,
+          win: isUserWin,
+          profit: parseFloat(profit.toFixed(2)),
+          time: new Date().toLocaleTimeString()
+        };
+        setGameHistory((prev) => {
+          const currentHist = Array.isArray(prev) ? prev : [];
+          const updatedHist = [newHistoryItem, ...currentHist].slice(0, 10);
+          localStorage.setItem(`empire_hist_${address}`, JSON.stringify(updatedHist));
+          return updatedHist;
+        });
         setLastResult(rolledNumber);
         setIsRolling(false);
         if (isUserWin) { setShowSuccess(true); }
       }, 2000);
-    } catch (error) { console.error("Game Transaction Play Error:", error); setIsRolling(false); alert("Transaction failed or execution rejected."); }
+    } catch (error) {
+      console.error("Game Transaction Play Error:", error);
+      setIsRolling(false);
+      alert("Transaction failed or execution rejected.");
+    }
   };
+
   return (
     <div className="min-h-screen bg-[#050505] text-white p-6 font-sans flex flex-col">
       <div className="flex justify-end mb-8">
