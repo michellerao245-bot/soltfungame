@@ -3,7 +3,7 @@ import { GAMES_DATA } from "./data/games";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, ExternalLink, ArrowLeft } from "lucide-react";
-import { useAccount } from "wagmi";
+//import { useAccount } from "wagmi";
 import { Web3Provider } from "./context/Web3Provider";
 
 
@@ -34,7 +34,7 @@ import TransactionSuccessModal from "./components/TransactionSuccessModal";
 import WalletDisplay from "./components/WalletDisplay";
 
 function CasinoApp() {
-  const { address, isConnected } = useAccount();
+ // const { address, isConnected } = useAccount();
 
   const [activeGame, setActiveGame] = useState(null);
   const [betAmount, setBetAmount] = useState(10);
@@ -48,14 +48,14 @@ function CasinoApp() {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  useEffect(() => {
-    if (isConnected && address) {
-      loadUserData(address);
-    } else {
-      setBalance(0);
-      setGameHistory([]);
-    }
-  }, [isConnected, address]);
+ // useEffect(() => {
+   // if (isConnected && address) {
+   //   loadUserData(address);
+   // } else {
+    //  setBalance(0);
+     // setGameHistory([]);
+   // }
+  //}, [isConnected, address]);
 
   const loadUserData = (walletAddr) => {
     if (!walletAddr) return;
