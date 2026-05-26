@@ -3,7 +3,7 @@ import { GAMES_DATA } from "./data/games";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, ExternalLink, ArrowLeft } from "lucide-react";
-import { Web3Provider } from "./context/Web3Provider";
+//import { Web3Provider } from "./context/Web3Provider";
 import GhostHunter from "./components/GhostHunter";
 import SoltSlots from "./components/SoltSlots";
 import Footer from "./components/Footer";
@@ -131,7 +131,7 @@ function CasinoApp() {
 
 export default function App() {
   return (
-    <Web3Provider>
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<CasinoApp />} />
@@ -141,6 +141,6 @@ export default function App() {
           <Route path="/marketing" element={<MarketingService />} />
         </Routes>
       </BrowserRouter>
-    </Web3Provider>
+    
   );
 }
