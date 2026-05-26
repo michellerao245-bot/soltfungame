@@ -3,6 +3,7 @@ import { GAMES_DATA } from "./data/games";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Flame, ExternalLink, ArrowLeft } from "lucide-react";
+import { useAccount } from "wagmi";
 import { Web3Provider } from "./context/Web3Provider";
 import GhostHunter from "./components/GhostHunter";
 import SoltSlots from "./components/SoltSlots";
@@ -26,6 +27,7 @@ import TransactionSuccessModal from "./components/TransactionSuccessModal";
 import WalletDisplay from "./components/WalletDisplay";
 
 function CasinoApp() {
+  const { address, isConnected } = useAccount();
   const [activeGame, setActiveGame] = useState(null);
   const [betAmount, setBetAmount] = useState(10);
   const [rollUnder, setRollUnder] = useState(50);
