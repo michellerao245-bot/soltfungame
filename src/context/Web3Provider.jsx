@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { wagmiAdapter } from './config'; // config.js se import karenge
+import { wagmiAdapter } from '../config'; // config.js se import karenge
 
 const queryClient = new QueryClient();
 
