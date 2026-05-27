@@ -9,12 +9,19 @@ export const wagmiAdapter = new WagmiAdapter({
   networks: [bsc]
 });
 
-// Ye initialization sirf client-side par honi chahiye
-if (typeof window !== 'undefined') {
-  createAppKit({
-    adapters: [wagmiAdapter],
-    networks: [bsc],
-    projectId,
-    metadata: { name: 'SoltHub', description: 'Soltchain', url: 'https://soltfungame.vercel.app', icons: [''] }
-  });
-}
+// Yahan logic change kiya hai:
+export const initializeAppKit = () => {
+  if (typeof window !== 'undefined') {
+    createAppKit({
+      adapters: [wagmiAdapter],
+      networks: [bsc],
+      projectId,
+      metadata: { 
+        name: 'SoltHub', 
+        description: 'Soltchain', 
+        url: 'https://soltfungame.vercel.app', 
+        icons: [''] 
+      }
+    });
+  }
+};
